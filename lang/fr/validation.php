@@ -171,7 +171,6 @@ return [
         'birthday' => 'anniversaire',
         'body' => 'corps',
         'city' => 'ville',
-        'color' => 'color',
         'company' => 'entreprise',
         'compilation' => 'compilation',
         'concept' => 'concept',
@@ -291,5 +290,9 @@ return [
         'traveler_phone' => 'téléphone',
         'item_name' => "nom de l'objet",
         'lost_on' => 'date de la perte',
+        'color' => 'couleur',
+        'found_on' => 'trouvé le',
+        'place_id' => 'lieu',
+        'photos' => 'photos de l\'objet',
     ],
 ];
