@@ -43,7 +43,7 @@
                             {{ __('Statistiques') }}
                         </a>
 
-                        <a href="{{ route('claims.create') }}"
+                        <a href="{{ route('claims.public.create') }}"
                             class="bg-[#f97316] hover:bg-[#ea580c] text-white px-3 py-2 rounded-xl text-xs lg:text-sm font-bold shadow-sm transition whitespace-nowrap">
                             {{ __('Réclamer un objet') }}
                         </a>
@@ -113,7 +113,7 @@
                                 de perte</a>
                             <a href="{{ route('stats.index') }}"
                                 class="block px-3 py-2 rounded-lg text-base font-medium text-blue-100 hover:bg-white/10">{{ __('Statistiques') }}</a>
-                            <a href="{{ route('claims.create') }}"
+                            <a href="{{ route('claims.public.create') }}"
                                 class="block text-center mt-3 bg-[#f97316] text-white px-4 py-2.5 rounded-xl text-base font-bold">
                                 {{ __('Réclamer un objet') }}
                             </a>

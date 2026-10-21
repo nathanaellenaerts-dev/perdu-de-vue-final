@@ -10,7 +10,7 @@ class ClaimController extends Controller
     // Formulaire public /perdu
 public function createPublic()
 {
-    return view('claims.create'); 
+    return view('claims.create');
 }
 public function storePublic(Request $request)
 {

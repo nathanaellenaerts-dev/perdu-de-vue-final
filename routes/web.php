@@ -14,7 +14,7 @@ Route::get('/objets/nouveau', [ItemController::class, 'create'])->name('items.cr
 Route::post('/objets', [ItemController::class, 'store'])->name('items.store');
 
 // Formulaire public pour les voyageurs
-Route::get('/perdu', [ClaimController::class, 'createPublic'])->name('claims.create');
+Route::get('/perdu', [ClaimController::class, 'createPublic'])->name('claims.public.create');
 Route::post('/perdu', [ClaimController::class, 'storePublic'])->name('claims.public.store');
 
 // Espace Claims / Rapprochement (Placé avant {item} pour éviter les conflits 404)
