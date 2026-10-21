@@ -97,54 +97,55 @@ class ItemController extends Controller
             ->with('success', __('« :name » a retrouvé son propriétaire.', ['name' => $item->name]));
     }
 
-    public function store(Request $request)
-    {
-        // 1. On valide et on récupère les données propres
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'place_id' => 'required|exists:places,id',
-            'found_on' => 'required|date',
-            'color' => 'required|string|max:50', // S'assure que color peut être null s'il est vide
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
+public function store(Request $request)
+{
+    // 1. Validation
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'place_id' => 'required|exists:places,id',
+        'found_on' => 'required|date',
+        'color' => 'required|string|max:50',
+        'tags' => 'nullable|array',
+        'tags.*' => 'exists:tags,id',
+        'photos' => 'nullable|array',
+        'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
 
-        // 2. On crée l'objet en utilisant les données validées (et on exclut 'photos' qui n'est pas une colonne de la table items)
-        $item = Item::create(collect($validatedData)->except('photos')->toArray());
+    // 2. Création de l'objet (sans photos ni tags, qui ne sont pas des colonnes de items)
+    $item = Item::create(
+        collect($validatedData)->except(['photos', 'tags'])->toArray()
+    );
 
-/// 3. Gestion ultra-directe des photos
+    // 3. Étiquettes
+    $item->tags()->sync($request->input('tags', []));
+
+    // 4. Photos
     if ($request->hasFile('photos')) {
         $isFirst = true;
 
         foreach ($request->file('photos') as $file) {
-            if ($file) {
-                // SOLUTION RADICALE : On génère un nom unique et on déplace manuellement le fichier
-                $filename = uniqid('item_') . '.' . $file->getClientOriginalExtension();
-
-                // On stocke directement dans storage/app/public/items
-                $destinationPath = storage_path('app/public/items');
-
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0775, true);
-                }
-
-                $file->move($destinationPath, $filename);
-                $path = 'items/' . $filename;
-
-                // Enregistrement en base de données
-                $item->photos()->create([
-                    'path' => $path,
-                    'is_cover' => $isFirst,
-                ]);
-
-                $isFirst = false;
+            if (!$file || !$file->isValid()) {
+                continue;
             }
+
+            $filename = uniqid('item_') . '.' . $file->getClientOriginalExtension();
+
+            // Stocke dans storage/app/public/items (le dossier est créé si besoin)
+            $path = $file->storeAs('items', $filename, 'public');
+
+            $item->photos()->create([
+                'path' => $path,
+                'is_cover' => $isFirst,
+            ]);
+
+            $isFirst = false;
         }
     }
 
-        return redirect()->route('items.index')
-            ->with('success', __('L\'objet a été ajouté avec succès.'));
-    }
+    return redirect()->route('items.index')
+        ->with('success', __('L\'objet a été ajouté avec succès.'));
+}
 
 public function update(Request $request, Item $item)
 {

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/objets');
 Route::get('/objets', [ItemController::class, 'index'])->name('items.index');
 Route::get('/objets/nouveau', [ItemController::class, 'create'])->name('items.create');
-Route::post('/objets', [ItemController::class, 'store'])->name('items.store');
+Route::post('/ajouter-un-objet', [ItemController::class, 'store'])->name('items.store');
 
 // Formulaire public pour les voyageurs
 Route::get('/perdu', [ClaimController::class, 'createPublic'])->name('claims.public.create');
