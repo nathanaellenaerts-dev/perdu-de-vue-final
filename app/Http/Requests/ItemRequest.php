@@ -21,7 +21,8 @@ class ItemRequest extends FormRequest
             'color' => ['required', Rule::enum(Color::class)],
             'found_on' => ['required', 'date', 'before_or_equal:today'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], // Max 2Mo
+            'photos' => ['nullable', 'array'],
+            'photos.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], // Max 2Mo par photo
             'tags' => ['nullable', 'array'],
             'tags.*' => ['exists:tags,id'],
         ];
@@ -38,10 +39,10 @@ class ItemRequest extends FormRequest
             'color.enum' => 'La couleur sélectionnée est invalide.',
             'found_on.required' => 'La date de découverte est obligatoire.',
             'found_on.date' => 'La date de découverte doit être une date valide.',
-            'before_or_equal' => 'La date de découverte ne peut pas être dans le futur.',
-            'photo.image' => 'Le fichier doit être une image.',
-            'photo.mimes' => 'L\'image doit être au format JPEG, PNG, JPG ou WEBP.',
-            'photo.max' => 'L\'image ne doit pas dépasser 2 Mo.',
+            'found_on.before_or_equal' => 'La date de découverte ne peut pas être dans le futur.',
+            'photos.*.image' => 'Le fichier doit être une image.',
+            'photos.*.mimes' => 'L\'image doit être au format JPEG, PNG, JPG ou WEBP.',
+            'photos.*.max' => 'Chaque image ne doit pas dépasser 2 Mo.',
         ];
     }
 }

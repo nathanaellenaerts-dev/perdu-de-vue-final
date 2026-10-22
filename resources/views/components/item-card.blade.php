@@ -2,27 +2,10 @@
 
 <div class="relative bg-white dark:bg-[#091d32] rounded-2xl p-5 border border-amber-900/10 dark:border-blue-900/40 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
 
-    <!-- TAG COULEUR (Placé ici en absolute par rapport à la carte) -->
+    <!-- Pastille de couleur (en absolute par rapport à la carte) -->
     @if ($item->color)
-        @php
-            $colorValue = $item->color instanceof \App\Enums\Color ? $item->color->value ?? $item->color->name : $item->color;
-            $colorLabel = method_exists($item->color, 'label') ? $item->color->label() : ucfirst((string) $colorValue);
-            $colorClasses = [
-                'rouge' => 'bg-red-500 text-white',
-                'bleu' => 'bg-blue-500 text-white',
-                'vert' => 'bg-green-500 text-white',
-                'noir' => 'bg-gray-900 text-white border border-gray-700',
-                'blanc' => 'bg-white text-gray-800 border border-gray-300',
-                'jaune' => 'bg-yellow-400 text-gray-900',
-                'gris' => 'bg-gray-500 text-white',
-                'marron' => 'bg-amber-800 text-white',
-            ];
-            $badgeStyle = $colorClasses[strtolower((string) $colorValue)] ?? 'bg-gray-200 text-gray-700';
-        @endphp
         <div class="absolute top-4 right-4 z-10">
-            <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm {{ $badgeStyle }}">
-                {{ $colorLabel }}
-            </span>
+            <x-color-badge :color="$item->color" />
         </div>
     @endif
 
@@ -57,6 +40,15 @@
             <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 <span>📍</span> {{ $item->place->name }}
             </p>
+        @endif
+
+        <!-- Étiquettes -->
+        @if ($item->tags->isNotEmpty())
+            <div class="flex flex-wrap gap-1.5 pt-1">
+                @foreach ($item->tags as $tag)
+                    <x-badge>{{ $tag->name }}</x-badge>
+                @endforeach
+            </div>
         @endif
     </div>
 

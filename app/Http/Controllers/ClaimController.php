@@ -18,9 +18,11 @@ public function storePublic(Request $request)
         'traveler_name'  => 'required|string|max:255',
         'traveler_email' => 'required|email|max:255',
         'traveler_phone' => 'nullable|string|max:50',
-        'lost_on'        => 'required|date',
+        'lost_on'        => 'required|date|before_or_equal:today',
         'item_name'      => 'required|string|max:255',
         'description'    => 'required|string',
+    ], [
+        'lost_on.before_or_equal' => __('La date de la perte ne peut pas être dans le futur.'),
     ]);
 
     Claim::create($validated);

@@ -97,20 +97,10 @@ class ItemController extends Controller
             ->with('success', __('« :name » a retrouvé son propriétaire.', ['name' => $item->name]));
     }
 
-public function store(Request $request)
+public function store(ItemRequest $request)
 {
-    // 1. Validation
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'place_id' => 'required|exists:places,id',
-        'found_on' => 'required|date',
-        'color' => 'required|string|max:50',
-        'tags' => 'nullable|array',
-        'tags.*' => 'exists:tags,id',
-        'photos' => 'nullable|array',
-        'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
+    // 1. Données déjà validées par ItemRequest
+    $validatedData = $request->validated();
 
     // 2. Création de l'objet (sans photos ni tags, qui ne sont pas des colonnes de items)
     $item = Item::create(
@@ -121,89 +111,65 @@ public function store(Request $request)
     $item->tags()->sync($request->input('tags', []));
 
     // 4. Photos
-    if ($request->hasFile('photos')) {
-        $isFirst = true;
-
-        foreach ($request->file('photos') as $file) {
-            if (!$file || !$file->isValid()) {
-                continue;
-            }
-
-            $filename = uniqid('item_') . '.' . $file->getClientOriginalExtension();
-
-            // Stocke dans storage/app/public/items (le dossier est créé si besoin)
-            $path = $file->storeAs('items', $filename, 'public');
-
-            $item->photos()->create([
-                'path' => $path,
-                'is_cover' => $isFirst,
-            ]);
-
-            $isFirst = false;
-        }
-    }
+    $this->storePhotos($item, $request);
 
     return redirect()->route('items.index')
         ->with('success', __('L\'objet a été ajouté avec succès.'));
 }
 
-public function update(Request $request, Item $item)
+public function update(ItemRequest $request, Item $item)
 {
-    // 1. Validation des données
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'place_id' => 'required|exists:places,id',
-        'found_on' => 'required|date',
-        'color' => 'required|string|max:50',
-        'photos' => 'nullable|array',
-        'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
+    // 1. Données déjà validées par ItemRequest (la même que l'ajout)
+    $validatedData = $request->validated();
 
     // 2. Mise à jour des informations de l'objet
     $item->update(
-        collect($validatedData)->except('photos')->toArray()
+        collect($validatedData)->except(['photos', 'tags'])->toArray()
     );
 
     // 3. Mise à jour des tags
     $item->tags()->sync($request->input('tags', []));
 
     // 4. Ajout des nouvelles photos
-    if ($request->hasFile('photos')) {
-
-        // Si l'objet n'a aucune photo, la première sera la couverture
-        $isFirst = $item->photos()->count() === 0;
-
-        foreach ($request->file('photos') as $file) {
-
-            if (!$file || !$file->isValid()) {
-                continue;
-            }
-
-            $filename = uniqid('item_') . '.'
-                . $file->getClientOriginalExtension();
-
-            $destinationPath = storage_path('app/public/items');
-
-            if (!is_dir($destinationPath)) {
-                mkdir($destinationPath, 0775, true);
-            }
-
-            $file->move($destinationPath, $filename);
-
-            // Enregistrement du chemin en base de données
-            $item->photos()->create([
-                'path' => 'items/' . $filename,
-                'is_cover' => $isFirst,
-            ]);
-
-            $isFirst = false;
-        }
-    }
+    $this->storePhotos($item, $request);
 
     return redirect()->route('items.index')
         ->with('success', __('L\'objet a été modifié avec succès.'));
 }
+// Enregistre les photos envoyées (même méthode pour l'ajout et la modification)
+private function storePhotos(Item $item, Request $request): void
+{
+    if (!$request->hasFile('photos')) {
+        return;
+    }
+
+    // Si l'objet n'a aucune photo, la première sera la couverture
+    $isFirst = $item->photos()->count() === 0;
+
+    foreach ($request->file('photos') as $file) {
+        if (!$file || !$file->isValid()) {
+            continue;
+        }
+
+        $filename = uniqid('item_') . '.' . $file->getClientOriginalExtension();
+
+        $destinationPath = storage_path('app/public/items');
+
+        if (!is_dir($destinationPath)) {
+            mkdir($destinationPath, 0775, true);
+        }
+
+        $file->move($destinationPath, $filename);
+
+        $item->photos()->create([
+            'path' => 'items/' . $filename,
+            'is_cover' => $isFirst,
+        ]);
+
+        $isFirst = false;
+    }
+}
+
 // Suppression complète de l'objet et de TOUTES ses photos
 public function destroy(Item $item)
 {
@@ -250,6 +216,3 @@ public function destroyPhoto(Photo $photo)
 }
 
 }
-
-
-

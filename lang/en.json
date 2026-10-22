@@ -155,7 +155,11 @@
     "Choisir des fichiers": "Choose files",
     "Aucun fichier sélectionné": "No files selected",
     "Vous pouvez sélectionner plusieurs photos en même temps.": "You can select multiple photos at once.",
-    "Formats acceptés : JPG, PNG, WEBP (Max 2 Mo par photo).": "Accepted formats: JPG, PNG, WEBP (max. 2 MB per photo)."
+    "Formats acceptés : JPG, PNG, WEBP (Max 2 Mo par photo).": "Accepted formats: JPG, PNG, WEBP (max. 2 MB per photo).",
+    "La date de la perte ne peut pas être dans le futur.": "The date of loss cannot be in the future.",
+    "Nom de l'objet / Sélectionner un objet": "Item name / Select an item",
+    " Choisir un objet ": "Choose an item"
+
 
 
 
