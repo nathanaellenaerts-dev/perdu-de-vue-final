@@ -64,6 +64,7 @@
                                 <span>{{ __('Mode clair') }}</span>
                             </span>
                         </button>
+
                     </div>
 
                     <!-- Menu desktop (grands écrans uniquement) -->
@@ -112,6 +113,10 @@
                                 <span>{{ __('Mode clair') }}</span>
                             </span>
                         </button>
+                        <a href="{{ url('/composants') }}"
+                            class="px-2 py-2 rounded-xl bg-white/10 hover:bg-white/25 transition text-white text-xs font-medium whitespace-nowrap">
+                            {{ __('Composants') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -132,6 +137,9 @@
                     <a href="{{ route('claims.public.create') }}"
                         class="block text-center mt-3 bg-[#f97316] hover:bg-[#ea580c] text-white px-4 py-2.5 rounded-xl text-base font-bold transition">
                         {{ __('Réclamer un objet') }}
+                    </a>
+                    <a href="{{ url('/composants') }}"
+                        class="block px-3 py-2.5 rounded-lg text-base font-medium text-blue-100 hover:bg-white/10">{{ __('Composants') }}
                     </a>
                 </div>
             </div>

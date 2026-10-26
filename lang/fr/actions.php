@@ -99,8 +99,8 @@ return [
     'subscribe'       => 'S\'abonner',
     'switch'          => 'Changer',
     'switch_to_role'  => 'Passer au rôle',
-    'tag'             => 'Mot clé',
-    'tags'            => 'Mots clés',
+    'tag'             => 'Étiquette',
+    'tags'            => 'Étiquettes',
     'target_link'     => [
         'blank'  => 'Ouvrir dans une nouvelle fenêtre',
         'parent' => 'Ouvrir dans la fenêtre parente',

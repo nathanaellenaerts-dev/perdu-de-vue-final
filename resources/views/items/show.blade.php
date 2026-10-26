@@ -19,7 +19,7 @@
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900">{{ $item->name }}</h1>
                         <p class="text-sm text-gray-500 mt-1">
-                            {{ __('Trouvé le') }} {{ $item->found_on->format('d/m/Y') }}
+                            {{ __('Date de découverte') }} {{ $item->found_on->format('d/m/Y') }}
                         </p>
                     </div>
                     <div>

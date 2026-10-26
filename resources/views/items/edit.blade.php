@@ -10,76 +10,43 @@
 
                 <!-- Nom de l'objet -->
                 <div>
-                    <label for="name" class="block text-sm font-semibold text-gray-900 mb-1">{{ __('Nom de l\'objet') }} *</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $item->name) }}"
-                        @class([
-                            'w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900',
-                            'border-red-500 bg-red-50' => $errors->has('name'),
-                            'border-gray-300' => !$errors->has('name'),
-                        ]) maxlength="60" required>
-                    @error('name')
-                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
-                    @enderror
+                    <x-label for="name">{{ __('Nom de l’objet') }}</x-label>
+                    <x-input name="name" id="name" :value="old('name', $item->name)" maxlength="60" />
+                    @error('name')<p id="name-error" class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Lieu de découverte -->
+                                <!-- Lieu de découverte -->
                 <div>
-                    <label for="place_id" class="block text-sm font-semibold text-gray-900 mb-1">{{ __('Lieu de découverte') }} *</label>
-                    <select name="place_id" id="place_id" @class([
-                        'w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900',
-                        'border-red-500 bg-red-50' => $errors->has('place_id'),
-                        'border-gray-300' => !$errors->has('place_id'),
-                    ]) required>
-                        <option value="" class="text-gray-900">{{ __('Sélectionnez un lieu') }}</option>
+                    <x-label for="place_id">{{ __('Lieu de découverte') }}</x-label>
+                    <x-select name="place_id" id="place_id">
+                        <option value="">{{ __('Sélectionnez un lieu') }}</option>
                         @foreach ($places as $place)
-                            <option value="{{ $place->id }}" class="text-gray-900"
-                                {{ old('place_id', $item->place_id) == $place->id ? 'selected' : '' }}>
-                                {{ $place->name }} ({{ $place->kind->label() }})
-                            </option>
+                            <option value="{{ $place->id }}" @selected(old('place_id', $item->place_id) == $place->id)>{{ $place->name }} ({{ $place->kind->label() }})</option>
                         @endforeach
-                    </select>
-                    @error('place_id')
-                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
-                    @enderror
+                    </x-select>
+                    @error('place_id')<p id="place_id-error" class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Couleur -->
+                                <!-- Couleur -->
                 <div>
-                    <label for="color" class="block text-sm font-semibold text-gray-900 mb-1">{{ __('Couleur') }} *</label>
-                    <select name="color" id="color" @class([
-                        'w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900',
-                        'border-red-500 bg-red-50' => $errors->has('color'),
-                        'border-gray-300' => !$errors->has('color'),
-                    ]) required>
-                        <option value="" class="text-gray-900">{{ __('Sélectionnez une couleur') }}</option>
+                    <x-label for="color">{{ __('Couleur') }}</x-label>
+                    <x-select name="color" id="color">
+                        <option value="">{{ __('Sélectionnez une couleur') }}</option>
                         @foreach (\App\Enums\Color::cases() as $color)
-                            <option value="{{ $color->value }}" class="text-gray-900"
-                                {{ old('color', $item->color->value ?? $item->color) === $color->value ? 'selected' : '' }}>
-                                {{ $color->label() }}
-                            </option>
+                            <option value="{{ $color->value }}" @selected(old('color', $item->color->value ?? $item->color) === $color->value)>{{ $color->label() }}</option>
                         @endforeach
-                    </select>
-                    @error('color')
-                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
-                    @enderror
+                    </x-select>
+                    @error('color')<p id="color-error" class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Date de découverte -->
+                                <!-- Date de découverte -->
                 <div>
-                    <label for="found_on" class="block text-sm font-semibold text-gray-900 mb-1">{{ __('Trouvé le') }} *</label>
-                    <input type="date" name="found_on" id="found_on"
-                        value="{{ old('found_on', $item->found_on->format('Y-m-d')) }}" @class([
-                            'w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900',
-                            'border-red-500 bg-red-50' => $errors->has('found_on'),
-                            'border-gray-300' => !$errors->has('found_on'),
-                        ])
-                        required>
-                    @error('found_on')
-                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
-                    @enderror
+                    <x-label for="found_on">{{ __('Date de découverte') }}</x-label>
+                    <x-input name="found_on" type="date" id="found_on" :value="old('found_on', $item->found_on->format('Y-m-d'))" />
+                    @error('found_on')<p id="found_on-error" class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Photos de l'objet -->
+                                <!-- Photos de l'objet -->
                 <div>
                     <label for="photos" class="block text-sm font-semibold text-gray-900 mb-1.5">
                         {{ __('Photos de l\'objet') }}
@@ -118,23 +85,17 @@
 
                 <!-- Description -->
                 <div>
-                    <label for="description" class="block text-sm font-semibold text-gray-900 mb-1">{{ __('Description') }}</label>
-                    <textarea name="description" id="description" rows="4" @class([
-                        'w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900',
-                        'border-red-500 bg-red-50' => $errors->has('description'),
-                        'border-gray-300' => !$errors->has('description'),
-                    ])>{{ old('description', $item->description) }}</textarea>
-                    @error('description')
-                        <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>
-                    @enderror
+                    <x-label for="description">{{ __('Description') }}</x-label>
+                    <x-textarea name="description" id="description" rows="4">{{ old('description', $item->description) }}</x-textarea>
+                    @error('description')<p id="description-error" class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Étiquettes (Cases à cocher) -->
+                                <!-- Étiquettes (Cases à cocher) -->
                 <div>
                     <span class="block text-sm font-semibold text-gray-900 mb-2">{{ __('Étiquettes') }}</span>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         @php
-                            $selectedTags = old('tags', $item->tags->pluck('id')->toArray());
+                            $selectedTags = session()->hasOldInput() ? (array) old('tags', []) : $item->tags->pluck('id')->toArray();
                         @endphp
                         @foreach ($tags as $tag)
                             <label class="flex items-center space-x-2 text-sm text-gray-900 font-medium cursor-pointer">

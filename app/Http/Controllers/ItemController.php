@@ -17,7 +17,7 @@ class ItemController extends Controller
     // O4 : Liste des objets non restitués avec filtres ?lieu= et ?couleur=
     public function index(Request $request)
     {
-        $query = Item::with(['place', 'tags'])->whereNull('returned_at');
+        $query = Item::with(['place', 'tags', 'photos'])->whereNull('returned_at');
 
         // Recherche par texte (nom ou description)
         if ($request->filled('q')) {
@@ -30,12 +30,20 @@ class ItemController extends Controller
 
         // Filtre par lieu
         if ($request->filled('lieu')) {
-            $query->where('place_id', $request->lieu);
+            // Une valeur de lieu invalide ne doit pas être ignorée silencieusement.
+            if (filter_var($request->input('lieu'), FILTER_VALIDATE_INT) !== false) {
+                $query->where('place_id', (int) $request->input('lieu'));
+            } else {
+                $query->whereRaw('1 = 0');
+            }
         }
 
         // Filtre par couleur
         if ($request->filled('couleur')) {
-            $query->where('color', $request->couleur);
+            $color = Color::tryFrom((string) $request->input('couleur'));
+            if ($color !== null) {
+                $query->where('color', $color->value);
+            }
         }
         $sort = $request->input('tri', 'date-desc'); // Valeur par défaut
 
@@ -46,8 +54,7 @@ class ItemController extends Controller
             default => $query->latest('found_on'), // 'date-desc' ou valeur invalide interceptée
         };
 
-        $items = $query->latest('found_on')
-            ->paginate(9)
+        $items = $query->paginate(9)
             ->withQueryString(); // Conserve tous les paramètres (?, q=..., lieu=..., couleur=...) dans la pagination
 
         $places = Place::orderBy('name')->get();
@@ -81,7 +88,7 @@ class ItemController extends Controller
     }
 
     // O9 : Restituer l'objet
-    public function returnItem(Item $item)
+    public function return(Item $item)
     {
         // Sécurité au cas où l'utilisateur clique depuis un deuxième onglet obsolète
         if ($item->isReturned()) {

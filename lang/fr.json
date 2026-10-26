@@ -261,7 +261,6 @@
     "Nom de l'objet": "Nom de l'objet",
     "Couleur": "Couleur",
     "Choisir une couleur": "Choisir une couleur",
-    "Trouvé le": "Trouvé le",
     "Lieu": "Lieu",
     "Choisir un lieu": "Choisir un lieu",
     "Photos de l'objet": "Photos de l'objet",
@@ -378,6 +377,5 @@
     "obj.": "obj.",
     "Choisir des fichiers": "Choisir des fichiers",
     "Aucun fichier sélectionné": "Aucun fichier sélectionné",
-    "Vous pouvez sélectionner plusieurs photos en même temps.": "Vous pouvez sélectionner plusieurs photos en même temps.",
-    "Formats acceptés : JPG, PNG, WEBP (Max 2 Mo par photo).": "Formats acceptés : JPG, PNG, WEBP (Max 2 Mo par photo)."
+    "Vous pouvez sélectionner plusieurs photos en même temps.": "Vous pouvez sélectionner plusieurs photos en même temps."
 }

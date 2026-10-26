@@ -1,4 +1,10 @@
-{{-- Le libellé d'un champ. Même classes que l'exercice 14.7. --}}
+
+{{-- Libellé d'un champ --}}
 @props(['for'])
 
-<label for="{{ $for }}" {{ $attributes->class(['block text-sm font-medium']) }}>{{ $slot }}</label>
+<label
+    for="{{ $for }}"
+    {{ $attributes->class(['block text-sm font-medium text-black dark:text-black']) }}
+>
+    {{ $slot }}
+</label>

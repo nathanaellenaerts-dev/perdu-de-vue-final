@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/objets');
 Route::get('/objets', [ItemController::class, 'index'])->name('items.index');
 Route::get('/objets/nouveau', [ItemController::class, 'create'])->name('items.create');
-Route::post('/ajouter-un-objet', [ItemController::class, 'store'])->name('items.store');
+Route::post('/objets', [ItemController::class, 'store'])->name('items.store');
 
 // Formulaire public pour les voyageurs
 Route::get('/perdu', [ClaimController::class, 'createPublic'])->name('claims.public.create');
@@ -34,7 +34,7 @@ Route::delete('/photos/{photo}', [ItemController::class, 'destroyPhoto'])->name(
 Route::get('/objets/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/objets/{item}/modifier', [ItemController::class, 'edit'])->name('items.edit');
 Route::put('/objets/{item}', [ItemController::class, 'update'])->name('items.update');
-Route::patch('/items/{item}/return', [ItemController::class, 'returnItem'])->name('items.return');
+Route::patch('/objets/{item}/restitution', [ItemController::class, 'return'])->name('items.return');
 Route::delete('/objets/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
 // Routes pour les lieux
