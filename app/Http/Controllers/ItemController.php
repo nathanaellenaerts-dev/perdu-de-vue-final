@@ -177,24 +177,29 @@ private function storePhotos(Item $item, Request $request): void
     }
 }
 
-// Suppression complète de l'objet et de TOUTES ses photos
+
 public function destroy(Item $item)
 {
-    // On boucle sur chaque photo de la relation pour les effacer du disque
+    // Supprimer les fichiers photos du disque
     foreach ($item->photos as $photo) {
         if ($photo->path && Storage::disk('public')->exists($photo->path)) {
             Storage::disk('public')->delete($photo->path);
         }
     }
 
-    // Si votre table photos n'a pas de contrainte ON DELETE CASCADE, on force la suppression des enregistrements
+    // Supprimer les enregistrements des photos
     $item->photos()->delete();
 
-    // Suppression de l'objet principal
+    // Supprimer les associations entre l'objet et ses tags
+    $item->tags()->detach();
+
+    // Supprimer l'objet
     $item->delete();
 
-    return redirect()->route('items.index')->with('success', __('L\'objet et ses photos ont été supprimés.'));
+    return redirect()->route('items.index')
+        ->with('success', __('L\'objet et ses photos ont été supprimés.'));
 }
+
 
 
 // Suppression d'une seule photo
